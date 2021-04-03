@@ -1,14 +1,17 @@
+"""
+Establishes a set of functions needed to process data into more helpful formats.
+"""
+
 import datetime as dt
 
-def convert_date_to_date_string(date):
+def convert_date_to_datetime(date):
     """
     """
+
+    date = str(date)
+
     no_comma_date = date.replace(",", "")
 
-    list_date = no_comma_date.split()
+    date = dt.datetime.strptime(no_comma_date, "%B %d %Y")
 
-    month_number = dt.datetime.strptime(list_date[0], "%B")
-
-    date_string = month_number + list_date[1] + list_date[2]
-
-    return date_string
+    return date
