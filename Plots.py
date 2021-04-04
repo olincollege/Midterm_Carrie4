@@ -107,6 +107,10 @@ def bubble_graph(x_axis=None, y_axis=None, graph_title=None, x_axis_title=None, 
 
     return None
 
+def bar_graph(x_data, y_data):
+       # plt.barh(x_data, y_data )
+    return None
+
 def pie_chart(labels, sizes,end_index,start_index = 0):
     """
     Creates a pie chart from a list of integers where each slice is
@@ -120,18 +124,29 @@ def pie_chart(labels, sizes,end_index,start_index = 0):
 
     Return: None, plots a pi chart
     """
-    labels = labels[start_index:end_index]
-
+    
+    label = labels[start_index:end_index]
+    
+        
     sizes = [size/sum(sizes[start_index:end_index]) for size in sizes[start_index:end_index]]
 
+    for count, chunk in enumerate(sizes):
+        if chunk < .02:
+            label[count] = ""
+
     explode_index =sizes.index(max(sizes))
-    explode = [0] * (len(labels))
+    explode = [0] * (len(label))
     explode[explode_index] = .11
 
     fig1, ax1 = plt.subplots()
-    ax1.pie(sizes, explode=explode, labels=labels, autopct='%1.1f%%', shadow=True, startangle=90)
+    
+    def my_autopct(pct):
+        return ('%1.1f%%' % pct) if pct > 4 else ''
+    ax1.pie(sizes, explode=explode, labels=label, autopct=my_autopct, shadow=True, startangle=90)
     ax1.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
 
+    plt.legend(labels[start_index:end_index], loc="center left")
+    
     plt.show()
 
     return None
@@ -171,10 +186,53 @@ def violin_plot(x_data,x_title="Set X axis",y_title="",graph_title="Set title"):
     plt.show()
 
     return None
+
+def color_changer():
+    CB91_Blue = '#2CBDFE'
+    CB91_Green = '#47DBCD'
+    CB91_Pink = '#F3A0F2'
+    CB91_Purple = '#9D2EC5'
+    CB91_Violet = '#661D98'
+    CB91_Amber = '#F5B14C'
+    color_list = [CB91_Blue, CB91_Pink, CB91_Green, CB91_Amber,
+                CB91_Purple, CB91_Violet]
+    plt.rcParams['axes.prop_cycle'] = plt.cycler(color=color_list)
+    return None
+
+def plot_format():
+    sns.set(font='Franklin Gothic Book',
+        rc={
+    'axes.axisbelow': False,
+    'axes.edgecolor': 'lightgrey',
+    'axes.facecolor': 'None',
+    'axes.grid': False,
+    'axes.labelcolor': 'dimgrey',
+    'axes.spines.right': False,
+    'axes.spines.top': False,
+    'figure.facecolor': 'white',
+    'lines.solid_capstyle': 'round',
+    'patch.edgecolor': 'w',
+    'patch.force_edgecolor': True,
+    'text.color': 'dimgrey',
+    'xtick.bottom': False,
+    'xtick.color': 'dimgrey',
+    'xtick.direction': 'out',
+    'xtick.top': False,
+    'ytick.color': 'dimgrey',
+    'ytick.direction': 'out',
+    'ytick.left': False,
+    'ytick.right': False})
+    sns.set_context("notebook", rc={"font.size":16,
+                                    "axes.titlesize":20,
+                                    "axes.labelsize":18})
+    return None
 #########################################################################
+color_changer()
 pie_chart(all_ratings, ratings_title_count,-1, 0)
 #bubble_graph()
 year_list = []
 for year in netflix_data['release_year']:
     year_list.append(year)
+
+plot_format()    
 violin_plot(year_list,"Hello","world","Star" )
