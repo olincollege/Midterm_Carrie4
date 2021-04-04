@@ -1,4 +1,12 @@
-def bubble_graph(x_axis=None, y_axis=None, graph_title=None, x_axis_title=None, y_axis_title=None,index=None):
+"""
+"""
+
+import matplotlib.pyplot as plt
+import seaborn as sns
+import numpy as np
+
+def bubble_graph(x_axis=None, y_axis=None, labels=None, graph_title=None, \
+                 x_axis_title=None, y_axis_title=None,index=-1):
     """
     Creates a bubble graph on an x and y plot where 
     the size of each bubble represents more data :)
@@ -6,6 +14,7 @@ def bubble_graph(x_axis=None, y_axis=None, graph_title=None, x_axis_title=None, 
     Arguments:
     x_axis: list of integers or strings to plot on the x_axis
     y_axis: listof integers to plot on the y_axis
+    labels: a list of strings that represent pie chart labels
     graph_title: title of graph in string form
     x_axis: x_axis label of graph in string form
     y_axis: y_axis label of graph in string form
@@ -13,20 +22,20 @@ def bubble_graph(x_axis=None, y_axis=None, graph_title=None, x_axis_title=None, 
     Returns: none, displays graph 
 
     """
-    
-    index = 13
+
     #Defines the color of the bubbles
-    colors = np.random.rand(len(all_release_years[0:index]))
+    colors = np.random.rand(len(x_axis[0:index]))
 
     #Defines what goes on th X-Axis in an int form
-    u, ind = np.unique(all_release_years[0:index], return_inverse=True)
+    u, ind = np.unique(x_axis[0:index], return_inverse=True)
 
     #Equation for size of each dot
     size = [element * 100
-    for element in director_title_count[0:index]]
+    for element in y_axis[0:index]]
 
     # Create scatterplot. alpha controls the opacity and s controls the size.
-    ax = sns.scatterplot(ind, director_title_count[0:index], alpha = 0.5,s = size)
+    ax = sns.scatterplot(x=ind, y=y_axis[0:index], alpha = 0.5,s = size, \
+        hue = colors)
 
     #Set Axis limits
     ax.set_xlim(0,6)
@@ -34,7 +43,9 @@ def bubble_graph(x_axis=None, y_axis=None, graph_title=None, x_axis_title=None, 
 
     #For each point, we add a text inside the bubble
     for line in range(0,ind[0]):
-        ax.text(ind[line], director_title_count[line], all_directors[line], horizontalalignment='center', size=10, color='black', weight='semibold')
+        ax.text(ind[line], y_axis[line], labels[line], \
+            horizontalalignment='center', size=10, color='black', \
+                weight='semibold')
     plt.xticks(range(len(u)), u)
 
     #Label graph
@@ -58,8 +69,10 @@ def pie_chart(labels, sizes,end_index,start_index = 0):
     Arugments:
     labels: A list of strings representing a label for each slice of the chart
     sizes: A list of integers associated with each label
-    end_index: an intiger representing the end range of data to plot (exclusive)
-    start_index: An itneger representign the start range of data to plot(inclusive)
+    end_index: an intiger representing the end range of data to plot 
+                (exclusive)
+    start_index: An itneger representign the start range of data to plot
+                (inclusive)
 
     Return: None, plots a pi chart
     """
@@ -67,7 +80,8 @@ def pie_chart(labels, sizes,end_index,start_index = 0):
     label = labels[start_index:end_index]
     
         
-    sizes = [size/sum(sizes[start_index:end_index]) for size in sizes[start_index:end_index]]
+    sizes = [size/sum(sizes[start_index:end_index]) for size in \
+        sizes[start_index:end_index]]
 
     for count, chunk in enumerate(sizes):
         if chunk < .02:
@@ -81,15 +95,19 @@ def pie_chart(labels, sizes,end_index,start_index = 0):
     
     def my_autopct(pct):
         return ('%1.1f%%' % pct) if pct > 4 else ''
-    ax1.pie(sizes, explode=explode, labels=label, autopct=my_autopct, shadow=True, startangle=90)
-    ax1.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
+    ax1.pie(sizes, explode=explode, labels=label, autopct=my_autopct, \
+        shadow=False, startangle=90, normalize = False)
+    
+    # Equal aspect ratio ensures that pie is drawn as a circle.
+    ax1.axis('equal')  
 
     plt.legend(labels[start_index:end_index], loc="center left")
     
     plt.show()
 
     return None
-def violin_plot(x_data,x_title="Set X axis",y_title="",graph_title="Set title"):
+def violin_plot(x_data,x_title="Set X axis",y_title="", \
+    graph_title="Set title"):
     """
     Takes a list of integer and creates a violin plot
 
@@ -108,17 +126,18 @@ def violin_plot(x_data,x_title="Set X axis",y_title="",graph_title="Set title"):
  
     fig, ax = plt.subplots(1, 1, figsize = (8,8))
     
-    violin_parts = ax.violinplot(x_data, pos, points=200, vert=True, widths=1.1,
-                        showmeans=False, showextrema=False, showmedians=False,
-                        quantiles=[0.05, 0.1, 0.8, 0.9], bw_method=0.5)
+    violin_parts = ax.violinplot(x_data,pos,points=200, vert=True, widths=1.1,
+                        showmeans=False, showextrema=False, showmedians=True,
+                        bw_method=0.5)
     
     for pc in violin_parts['bodies']:
-        pc.set_facecolor("Blue")
+        pc.set_facecolor("#E50914")
         pc.set_linewidth(2)
         pc.set_edgecolor('black')
-        pc.set_alpha(.5)
+        pc.set_alpha(0.8)
 
     plt.suptitle(f"{graph_title}")
+    plt.xticks(range(0,1),"")
     plt.xlabel(f"{x_title}")
     plt.ylabel(f"{y_title}")
     plt.subplots_adjust(hspace=0.4)
@@ -166,12 +185,3 @@ def plot_format():
                                     "axes.labelsize":18})
     return None
 #########################################################################
-color_changer()
-pie_chart(all_ratings, ratings_title_count,-1, 0)
-#bubble_graph()
-year_list = []
-for year in netflix_data['release_year']:
-    year_list.append(year)
-
-plot_format()    
-violin_plot(year_list,"Hello","world","Star" )

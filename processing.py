@@ -148,7 +148,7 @@ def remove_none_entries_one_dataframe_column(data_frame_column):
     
     return new_list
 
-def sort_list_based_on_other(list_to_order, secondary_list, \
+def sort_list_based_on_other(list_to_order, list_to_order_by, \
                              greatest_to_least=False):
     """
     Sorts two lists in parallel, giving priority to one list for sorting.
@@ -165,12 +165,12 @@ def sort_list_based_on_other(list_to_order, secondary_list, \
         new_list_1: the now-sorted priority list
         new_secondary_list: the now-sorted parallel list
     """
-    zipped = zip(list_to_order, secondary_list)
+    zipped = zip(list_to_order_by, list_to_order)
     sorted_zip = sorted(zipped, reverse=greatest_to_least)
 
     new_tuples = zip(*sorted_zip)
 
-    (new_list_1, new_secondary_list) = [list(new_tuple) for new_tuple in \
-                                      new_tuples]
+    (new_list_to_order_by, new_list_to_order) = [list(new_tuple) for \
+        new_tuple in new_tuples]
     
-    return new_list_1, new_secondary_list
+    return new_list_to_order, new_list_to_order_by
