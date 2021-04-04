@@ -74,7 +74,7 @@ def convert_date_to_datetime(date):
     and classification when graphing.
 
     Args:
-        date: a string
+        date: a string that contains a date in the form Month D, YYYY
     """
 
     no_comma_date = date.replace(",", "")
@@ -83,7 +83,7 @@ def convert_date_to_datetime(date):
 
     return date
 
-def remove_rows_containing_nan(list_1, list_2):
+def remove_rows_containing_nan_(list_1, list_2):
     """
     Removes empty values in one list and the corresponding values in a second
     list.
@@ -106,7 +106,7 @@ def remove_rows_containing_nan(list_1, list_2):
     final_list= []
 
     for row in list(combined_list):
-        if all(row) and row[0] is not "NONE":
+        if all(row) and "NONE" not in row:
             final_list.append(row)
 
     resulting_lists = [[i for i, j in final_list], [j for i, j in final_list]]
@@ -116,21 +116,48 @@ def remove_rows_containing_nan(list_1, list_2):
 
     return list_1, list_2
 
-def sort_list_greatest_to_least(list_to_order, counts, ordered_list=None):
+def remove_none_entries_one_dataframe_column(data_frame_column):
     """
+    Removes empty values from a column of a dataframe
+
+    Args:
+        data_frame_column: a column from a pandas dataframe
+    
+    Returns:
+        A list containing the non-none values of the input column
     """
-    if not ordered_list:
-        ordered_list = []
-    
-    if len(ordered_list) == 25:
-        return ordered_list
-    
-    item = list_to_order[counts.index(max(counts))]
+    list_ = list(data_frame_column)
+    new_list = []
 
-    ordered_list.append(item)
-
-    list_to_order.remove(item)
-
-    counts.remove(max(counts))
+    for entry in list_:
+        if entry != "NONE":
+            new_list.append(entry)
     
-    return sort_list_greatest_to_least(list_to_order, counts, ordered_list)
+    return new_list
+
+def sort_list_based_on_other(list_to_order, secondary_list, \
+                             greatest_to_least=False):
+    """
+    Sorts two lists in parallel, giving priority to one list for sorting.
+
+    Orders the lists least to greatest or greatest to least based on
+    user input. 
+
+    Args:
+        list_to_order: a list representing the priority list to sort by
+        secondary_list: a list to be sorted in parallel with list_to_order
+        greatest_to_least: A boolean representing whether to sort high to low
+
+    Returns:
+        new_list_1: the now-sorted priority list
+        new_secondary_list: the now-sorted parallel list
+    """
+    zipped = zip(list_to_order, secondary_list)
+    sorted_zip = sorted(zipped, reverse=greatest_to_least)
+
+    new_tuples = zip(*sorted_zip)
+
+    (new_list_1, new_secondary_list) = [list(new_tuple) for new_tuple in \
+                                      new_tuples]
+    
+    return new_list_1, new_secondary_list
