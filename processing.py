@@ -83,6 +83,19 @@ def convert_date_to_datetime(date):
 
     return date
 
+def release_year_to_add_date(exact_date, year):
+    """
+    Finds the difference in years of an exact date and a year
+
+    Args:
+        exact_date: a datetime.datetime object that contains an exact date
+        year: an integer representing a year
+    
+    Returns:
+        an integer representing the time elapsed in years between inputs
+    """
+    return int(exact_date.year()) - year
+
 def remove_rows_containing_nan_(list_1, list_2):
     """
     Removes empty values in one list and the corresponding values in a second
