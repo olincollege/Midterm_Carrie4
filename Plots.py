@@ -46,9 +46,10 @@ for year in netflix_data['release_year']:
         release_years[year] = release_years[year] + 1
 
 
-
+print(release_years)
 del directors['NONE']
 all_release_years = list(release_years.keys())
+release_years_count = list(release_years.values())
 all_durations = list(durations.keys())
 all_directors = list(directors.keys())
 director_title_count = list(directors.values())
@@ -58,7 +59,22 @@ all_ratings = list(ratings.keys())
 ratings_title_count = list(ratings.values())
 
 
-def bubble_graph(x_axis=None, y_axis=None, extra_axis=None, graph_title=None, x_axis_title=None, y_axis_title=None,index=None):
+def bubble_graph(x_axis=None, y_axis=None, graph_title=None, x_axis_title=None, y_axis_title=None,index=None):
+    """
+    Creates a bubble graph on an x and y plot where 
+    the size of each bubble represents more data :)
+
+    Arguments:
+    x_axis: list of integers or strings to plot on the x_axis
+    y_axis: listof integers to plot on the y_axis
+    graph_title: title of graph in string form
+    x_axis: x_axis label of graph in string form
+    y_axis: y_axis label of graph in string form
+
+    Returns: none, displays graph 
+
+    """
+    
     index = 13
     #Defines the color of the bubbles
     colors = np.random.rand(len(all_release_years[0:index]))
@@ -89,8 +105,21 @@ def bubble_graph(x_axis=None, y_axis=None, extra_axis=None, graph_title=None, x_
 
     plt.show()
 
+    return None
+
 def pie_chart(labels, sizes,end_index,start_index = 0):
-   
+    """
+    Creates a pie chart from a list of integers where each slice is
+    represented by the integer divided by the sum of the list of integers
+
+    Arugments:
+    labels: A list of strings representing a label for each slice of the chart
+    sizes: A list of integers associated with each label
+    end_index: an intiger representing the end range of data to plot (exclusive)
+    start_index: An itneger representign the start range of data to plot(inclusive)
+
+    Return: None, plots a pi chart
+    """
     labels = labels[start_index:end_index]
 
     sizes = [size/sum(sizes[start_index:end_index]) for size in sizes[start_index:end_index]]
@@ -102,27 +131,50 @@ def pie_chart(labels, sizes,end_index,start_index = 0):
     fig1, ax1 = plt.subplots()
     ax1.pie(sizes, explode=explode, labels=labels, autopct='%1.1f%%', shadow=True, startangle=90)
     ax1.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
-    
-    #centre_circle = plt.Circle((0,0),0.70,fc='white')
-    #fig = plt.gcf()
-    #fig.gca().add_artist(centre_circle)
 
     plt.show()
-def violin_plot(x_data=None,y_axis=None,x_title=None,Y_title=None,graph_title=None):
 
-    axs[1, 4].violinplot(data[-1:], pos[-1:], points=200, vert=False, widths=1.1,
-        showmeans=True, showextrema=True, showmedians=True,
-        quantiles=[0.05, 0.1, 0.8, 0.9], bw_method=0.5)
-    axs[1, 4].set_title('Custom violinplot 10', fontsize=fs)
+    return None
+def violin_plot(x_data,x_title="Set X axis",y_title="",graph_title="Set title"):
+    """
+    Takes a list of integer and creates a violin plot
 
+    Arguments: 
+    x_data: List of integers, or floats to be plotted based
+    on frequency each integer occurs
+    x_title: A string representing the x-axis label
+    y_title: A string representing the y-axis title
+    title: A strign representing the title of the graph
 
-    for ax in axs.flat:
-        ax.set_yticklabels([])
+    Returns: None, displays a graph
+    """
 
-fig.suptitle("Violin Plotting Examples")
-fig.subplots_adjust(hspace=0.4)
-plt.show()
+    fs = 10  # fontsize
+    pos = [0]
+ 
+    fig, ax = plt.subplots(1, 1, figsize = (8,8))
+    
+    violin_parts = ax.violinplot(x_data, pos, points=200, vert=True, widths=1.1,
+                        showmeans=False, showextrema=False, showmedians=False,
+                        quantiles=[0.05, 0.1, 0.8, 0.9], bw_method=0.5)
+    
+    for pc in violin_parts['bodies']:
+        pc.set_facecolor("Blue")
+        pc.set_linewidth(2)
+        pc.set_edgecolor('black')
+        pc.set_alpha(.5)
 
-#pie_chart(all_ratings, ratings_title_count,-1, 0)
+    plt.suptitle(f"{graph_title}")
+    plt.xlabel(f"{x_title}")
+    plt.ylabel(f"{y_title}")
+    plt.subplots_adjust(hspace=0.4)
+    plt.show()
+
+    return None
+#########################################################################
+pie_chart(all_ratings, ratings_title_count,-1, 0)
 #bubble_graph()
-violin_plot([1,2,2,3,3,3,4,4,5],[1,2,3,2,1])
+year_list = []
+for year in netflix_data['release_year']:
+    year_list.append(year)
+violin_plot(year_list,"Hello","world","Star" )
