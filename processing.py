@@ -83,7 +83,7 @@ def convert_date_to_datetime(date):
 
     return date
 
-def release_year_to_add_date(exact_date, year):
+def release_year_to_add_date(exact_date, release_year):
     """
     Finds the difference in years of an exact date and a year
 
@@ -94,9 +94,11 @@ def release_year_to_add_date(exact_date, year):
     Returns:
         an integer representing the time elapsed in years between inputs
     """
-    return int(exact_date.year()) - year
+    difference = int(int(exact_date.year) - int(release_year))
 
-def remove_rows_containing_nan_(list_1, list_2):
+    return difference
+
+def remove_rows_containing_nan(list_1, list_2):
     """
     Removes empty values in one list and the corresponding values in a second
     list.
@@ -174,3 +176,26 @@ def sort_list_based_on_other(list_to_order, list_to_order_by, \
         new_tuple in new_tuples]
     
     return new_list_to_order, new_list_to_order_by
+
+def find_year_difference(dates, years):
+    """
+    """
+    dates = list(dates)
+    years = list(years)
+
+    (dates, years) = remove_rows_containing_nan(dates, years)
+
+    new_dates = []
+
+    for date in dates:
+        working_date = date
+        if date[0] == " ":
+            working_date = working_date[1:]
+        new_dates.append(working_date)
+
+    all_dates = [convert_date_to_datetime(date) for date in new_dates]
+
+    differences = [release_year_to_add_date(all_dates[i], years[i]) for \
+        i in range(len(years))]
+    
+    return differences

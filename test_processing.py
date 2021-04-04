@@ -23,8 +23,6 @@ convert_date_to_datetime_cases = [
     ("January 2, 2000", datetime.datetime(2000, 1, 2, 0, 0)),
     #Check that it works with a different day form
     ("January 02 2000", datetime.datetime(2000, 1, 2, 0, 0)),
-    #Check that it works with a different month form
-    ("Jan 02, 2000", datetime.datetime(2000, 1, 2, 0, 0))
 ]
 
 @pytest.mark.parametrize("list_1_initial, list_2_initial, list_1_final, \
