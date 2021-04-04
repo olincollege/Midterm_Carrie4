@@ -57,8 +57,17 @@ def bubble_graph(x_axis=None, y_axis=None, labels=None, graph_title=None, \
 
     return None
 
-def bar_graph(x_data, y_data):
-       # plt.barh(x_data, y_data )
+def bar_graph(x_data=["1"], y_data=[1],x_label="",\
+    y_label="",graph_title=""):
+
+
+    plt.style.use("ggplot")
+    plt.bar(x_data,y_data, color = "red")
+    plt.xlabel(x_label)
+    plt.ylabel(y_label)
+    plt.title(graph_title)
+    plt.show()
+       
     return None
 
 def pie_chart(labels, sizes,end_index,start_index = 0):
@@ -106,6 +115,9 @@ def pie_chart(labels, sizes,end_index,start_index = 0):
     plt.show()
 
     return None
+
+
+
 def violin_plot(x_data,x_title="Set X axis",y_title="", \
     graph_title="Set title"):
     """
@@ -121,7 +133,6 @@ def violin_plot(x_data,x_title="Set X axis",y_title="", \
     Returns: None, displays a graph
     """
 
-    fs = 10  # fontsize
     pos = [0]
  
     fig, ax = plt.subplots(1, 1, figsize = (8,8))
@@ -185,3 +196,4 @@ def plot_format():
                                     "axes.labelsize":18})
     return None
 #########################################################################
+bar_graph()
