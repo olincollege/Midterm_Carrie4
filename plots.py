@@ -58,11 +58,11 @@ def bubble_graph(x_axis=None, y_axis=None, labels=None, graph_title=None, \
     return None
 
 def bar_graph(x_data=["1"], y_data=[1],x_label="",\
-    y_label="",graph_title=""):
+    y_label="",graph_title="",color = "red"):
 
 
     plt.style.use("ggplot")
-    plt.bar(x_data,y_data, color = "red")
+    plt.bar(x_data,y_data, color = color)
     plt.xlabel(x_label)
     plt.ylabel(y_label)
     plt.title(graph_title)
@@ -118,7 +118,7 @@ def pie_chart(labels, sizes,end_index,start_index = 0):
 
 
 
-def violin_plot(x_data,x_title="Set X axis",y_title="", \
+def violin_plot(,y_label,data,conditional, legend_label = "" ,x_label = None,x_title="Set X axis",y_title="", \
     graph_title="Set title"):
     """
     Takes a list of integer and creates a violin plot
@@ -132,39 +132,14 @@ def violin_plot(x_data,x_title="Set X axis",y_title="", \
 
     Returns: None, displays a graph
     """
-
-    pos = [0]
- 
-    fig, ax = plt.subplots(1, 1, figsize = (8,8))
-    
-    violin_parts = ax.violinplot(x_data,pos,points=200, vert=True, widths=1.1,
-                        showmeans=False, showextrema=False, showmedians=True,
-                        bw_method=0.5)
-    
-    for pc in violin_parts['bodies']:
-        pc.set_facecolor("#E50914")
-        pc.set_linewidth(2)
-        pc.set_edgecolor('black')
-        pc.set_alpha(0.8)
-
-    plt.suptitle(f"{graph_title}")
-    plt.xticks(range(0,1),"")
-    plt.xlabel(f"{x_title}")
-    plt.ylabel(f"{y_title}")
-    plt.subplots_adjust(hspace=0.4)
+    sns.set_theme(style="whitegrid")
+    ax = sns.violinplot(x ="{x_label}",y = "{y_label}", hue="{conditional}",data = data, orient = "v", cut = 0)
     plt.show()
 
     return None
 
-def color_changer():
-    CB91_Blue = '#2CBDFE'
-    CB91_Green = '#47DBCD'
-    CB91_Pink = '#F3A0F2'
-    CB91_Purple = '#9D2EC5'
-    CB91_Violet = '#661D98'
-    CB91_Amber = '#F5B14C'
-    color_list = [CB91_Blue, CB91_Pink, CB91_Green, CB91_Amber,
-                CB91_Purple, CB91_Violet]
+def color_changer(color_list = []):
+    
     plt.rcParams['axes.prop_cycle'] = plt.cycler(color=color_list)
     return None
 
@@ -195,5 +170,5 @@ def plot_format():
                                     "axes.titlesize":20,
                                     "axes.labelsize":18})
     return None
-#########################################################################
+######################################################
 bar_graph()
