@@ -264,5 +264,5 @@ def critics_vs_audience_scores(data_frame):
 
     df = three_lists_to_violin_dataframe(critics, audience, x_labels)
 
-    plots.violin_plot("Tomatometer Score", df, "Reviewer", x_label="x_label")
+    plots.violin_plot("Tomatometer Score", df, "Reviewer", x_label="x_label", graph_title="Critic and Audience Ratings of Netflix Titles")
 

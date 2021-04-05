@@ -63,9 +63,9 @@ def bar_graph(x_data=["1"], y_data=[1],x_label="",\
 
     plt.style.use("ggplot")
     plt.bar(x_data,y_data, color = color)
-    plt.xlabel(x_label)
-    plt.ylabel(y_label)
-    plt.title(graph_title)
+    plt.xlabel(x_label, fontsize = 24)
+    plt.ylabel(y_label, fontsize = 24)
+    plt.title(graph_title, fontsize = 36)
     plt.show()
        
     return None
@@ -106,12 +106,12 @@ def pie_chart(labels, sizes,end_index,start_index = 0):
         return ('%1.1f%%' % pct) if pct > 4 else ''
 
     ax1.pie(sizes, explode=explode, labels=label, autopct=my_autopct, \
-        shadow=False, startangle=90, normalize = False)
+        shadow=False, startangle=90, normalize = False, textprops={'fontsize':24})
     
     # Equal aspect ratio ensures that pie is drawn as a circle.
     ax1.axis('equal')  
 
-    plt.legend(labels[start_index:end_index], loc="center left")
+    plt.legend(labels[start_index:end_index], loc="center left", fontsize= 24)
     
     plt.show()
 
@@ -135,8 +135,10 @@ def violin_plot(y_label,data,conditional, legend_label = "" ,x_label = None,x_ti
     """
     plt.clf()
     sns.set_theme(style="whitegrid")
-    ax = sns.violinplot(x = x_label,y = y_label, hue= conditional,data = data, orient = "v", cut = 0, split=splitLogic, palette="rocket")
+    sns.set(font_scale=2)
+    ax = sns.violinplot(x = x_label,y = y_label, hue= conditional,data = data, orient = "v", cut = 0, split=splitLogic, palette="rocket", )
     ax.set(xlabel='')
+    ax.set_title(graph_title)
     plt.show()
 
     return None
