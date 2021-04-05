@@ -104,6 +104,7 @@ def pie_chart(labels, sizes,end_index,start_index = 0):
     
     def my_autopct(pct):
         return ('%1.1f%%' % pct) if pct > 4 else ''
+
     ax1.pie(sizes, explode=explode, labels=label, autopct=my_autopct, \
         shadow=False, startangle=90, normalize = False)
     
@@ -118,8 +119,8 @@ def pie_chart(labels, sizes,end_index,start_index = 0):
 
 
 
-def violin_plot(,y_label,data,conditional, legend_label = "" ,x_label = None,x_title="Set X axis",y_title="", \
-    graph_title="Set title"):
+def violin_plot(y_label,data,conditional, legend_label = "" ,x_label = None,x_title="Set X axis",y_title="", \
+    graph_title="Set title", splitLogic = True):
     """
     Takes a list of integer and creates a violin plot
 
@@ -132,8 +133,10 @@ def violin_plot(,y_label,data,conditional, legend_label = "" ,x_label = None,x_t
 
     Returns: None, displays a graph
     """
+    plt.clf()
     sns.set_theme(style="whitegrid")
-    ax = sns.violinplot(x ="{x_label}",y = "{y_label}", hue="{conditional}",data = data, orient = "v", cut = 0)
+    ax = sns.violinplot(x = x_label,y = y_label, hue= conditional,data = data, orient = "v", cut = 0, split=splitLogic, palette="rocket")
+    ax.set(xlabel='')
     plt.show()
 
     return None
@@ -171,4 +174,3 @@ def plot_format():
                                     "axes.labelsize":18})
     return None
 ######################################################
-bar_graph()

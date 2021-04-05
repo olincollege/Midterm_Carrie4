@@ -4,6 +4,7 @@ Establishes a set of functions needed to process data into more helpful formats.
 import pandas as pd
 import numpy as np
 import datetime as dt
+import plots
 
 def extract_directors_and_title_count(data_frame):
     """
@@ -65,6 +66,12 @@ def extract_rating_and_title_count(data_frame):
     
     rating_list = list(ratings.keys())
     rating_counts = list(ratings.values())
+
+    rating_counts[rating_list.index("UR")] += \
+        rating_counts[rating_list.index('2863')]
+    
+    rating_counts.pop(rating_list.index('2863'))
+    rating_list.pop(rating_list.index('2863'))
 
     return rating_list, rating_counts
 
@@ -150,6 +157,24 @@ def remove_none_entries_one_dataframe_column(data_frame_column):
     
     return new_list
 
+def remove_none_entries_one_list(list_):
+    """
+    Removes empty values from a list
+
+    Args:
+        list_: a column from a pandas dataframe
+    
+    Returns:
+        A list containing the non-none values of the input column
+    """
+    new_list = []
+
+    for entry in list_:
+        if entry != "NONE":
+            new_list.append(entry)
+    
+    return new_list
+
 def sort_list_based_on_other(list_to_order, list_to_order_by, \
                              greatest_to_least=False):
     """
@@ -175,6 +200,8 @@ def sort_list_based_on_other(list_to_order, list_to_order_by, \
     (new_list_to_order_by, new_list_to_order) = [list(new_tuple) for \
         new_tuple in new_tuples]
     
+    print(new_list_to_order)
+    
     return new_list_to_order, new_list_to_order_by
 
 def find_year_difference(dates, years):
@@ -199,3 +226,43 @@ def find_year_difference(dates, years):
         i in range(len(years))]
     
     return differences
+
+def find_cases_and_pull_from_other_column(data_frame, column_1, quality, \
+    column_2):
+    """
+    """
+    commonality_list = []
+    for index, item in enumerate(data_frame[column_1]):
+        if item == quality:
+            commonality_list.append(data_frame[column_2][index])
+
+    return commonality_list
+
+def three_lists_to_violin_dataframe(list_1, list_2, list_3):
+    """
+    """
+    logical = ["Critics"]*len(list_1)
+
+    logical.extend(["Audience"]*len(list_2))
+
+    list_1.extend(list_2)
+
+    dictionary = {"Tomatometer Score":list_1, "Reviewer":logical, "x_label": list_3}
+
+    return pd.DataFrame(dictionary)
+
+def critics_vs_audience_scores(data_frame):
+    """
+    """
+
+    critics = list(data_frame["rottentomatoes_tomatometer_score"])
+    audience = list(data_frame["rottentomatoes_audience_score"])
+
+    (critics, audience) = remove_rows_containing_nan(critics, audience)
+
+    x_labels = ["All Titles"] * (len(critics) + len(audience))
+
+    df = three_lists_to_violin_dataframe(critics, audience, x_labels)
+
+    plots.violin_plot("Tomatometer Score", df, "Reviewer", x_label="x_label")
+
