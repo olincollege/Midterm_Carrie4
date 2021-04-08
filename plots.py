@@ -21,9 +21,9 @@ def bar_graph(titles,x_data=1, y_data=1,color = "red"):
            color of plotted bars
 
     """
-    x_label = titles[1]
-    y_label = titles[2]
-    graph_title = titles[3]
+    x_label = titles[0]
+    y_label = titles[1]
+    graph_title = titles[2]
 
     plt.style.use("ggplot")
     plt.bar(x_data,y_data, color = color)
@@ -97,13 +97,13 @@ def violin_plot(headers,titles,data, splitlogic = True):
 
     Returns: None, displays a graph
     """
-    data_header = headers[1]
-    plot_index = headers[2]
-    conditional_header = headers[3]
+    data_header = headers[0]
+    plot_index = headers[1]
+    conditional_header = headers[2]
 
-    xlabel = titles[1]
-    ylabel = titles[2]
-    graph_title = titles[3]
+    xlabel = titles[0]
+    ylabel = titles[1]
+    graph_title = titles[2]
     plt.clf()
     sns.set_theme(style="whitegrid")
     sns.set(font_scale=2)

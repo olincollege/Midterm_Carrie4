@@ -316,5 +316,4 @@ def critics_vs_audience_scores(data_frame):
         "rottentomatoes_tomatometer_score", "Critic Score", \
         "rottentomatoes_audience_score", "Audience Score")
 
-    plots.violin_plot("PlotData", data, "Logic", x_label = "x_label",\
-        graph_title="Critic and Audience Ratings of Netflix Titles")
+    plots.violin_plot(["PlotData","x_label","Logic"],["X-Axis","y_axis","Critic and Audience Ratings of Netflix Titles"], data)
