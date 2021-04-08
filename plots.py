@@ -8,7 +8,7 @@ from matplotlib.pyplot import figure
 
 
 
-def bar_graph(titles,x_data=1, y_data=1,color = "red"):
+def bar_graph(titles,x_data, y_data,color = "red"):
 
     """
     Uses two lists of integers or floats to create a bar graph
@@ -17,7 +17,7 @@ def bar_graph(titles,x_data=1, y_data=1,color = "red"):
     x_data: list of floats or integers the same length as y_data
     y_data: list of floats or integers the same length as x_data
     titles: A list of strings with 3 values, representing the x-axis label,
-    y-axis label, and graph title respectively
+            y-axis label, and graph title respectively
     color: String representing colors supported by the matplotlib, changing the
            color of plotted bars
 
@@ -36,15 +36,15 @@ def bar_graph(titles,x_data=1, y_data=1,color = "red"):
 
 
 
-def pie_chart(labels, sizes,end_index,start_index = 0):
+def pie_chart(slice_labels, sizes,end_index,start_index = 0):
     """
     Creates a pie chart from a list of integers where each slice is
     represented by the integer divided by the sum of the list of integers
 
     Arugments:
-    labels: A list of strings representing a label for each slice of the chart
-            where the label of any value less than 2% is removed to eliminate
-            text clipping
+    slice_labels: A list of strings representing a label for each slice of the 
+            chart where the label of any value less than 2% is removed to 
+            eliminate text clipping
     sizes: A list of integers the same length of labels, representing each labels
             value
     end_index: An int representing the end range of data to plot
@@ -53,7 +53,7 @@ def pie_chart(labels, sizes,end_index,start_index = 0):
                  (inclusive)
     """
 
-    label = labels[start_index:end_index]
+    label = slice_labels[start_index:end_index]
     sizes = [size/sum(sizes[start_index:end_index]) for size in \
         sizes[start_index:end_index]]
     explode_index =sizes.index(max(sizes))
@@ -66,12 +66,11 @@ def pie_chart(labels, sizes,end_index,start_index = 0):
     explode[explode_index] = .05
 
     def my_autopct(pct):
-        return ('%1.1f%%' % pct) if pct > 4 else ''
+        return ("%1.1f%%" % pct) if pct > 4 else ""
 
     plt.rcParams["figure.figsize"] = (15, 15)
     plt.pie(sizes, explode=explode, labels=label, autopct=my_autopct, \
-        shadow=False, startangle=90, normalize = False, textprops={'fontsize':24})
-    #plt.legend(labels[start_index:end_index], loc="lower left", fontsize= 24)
+        shadow=False, startangle=90, normalize = False, textprops={"fontsize":24})
     plt.title("Netflix Content Ratings", fontsize = 45)
     plt.show()
 
@@ -90,11 +89,12 @@ def violin_plot(headers,titles,data, splitlogic = True):
              single plot. The last string is the conditional_header, named
              after the column that dictates which side of the splitted violin
              plots to plot the data on, when split = True.
-    data: a pandas dataframe containing at least data in one column, and a
-    second column, the plot_index. Conditional_header is optional based
-    on if split is True or not.
-    titles: a list of Strings where the first string represents the x-axis title,
-    the second represents the axis title and the last represents the graph title
+    data: A pandas dataframe containing at least data in one column, and a
+          second column, the plot_index. Conditional_header is optional based
+          on if split is True or not.
+    titles: A list of Strings where the first string represents the x-axis 
+            title, the second represents the axis title and the last represents
+            the graph title
 
 
     Returns: None, displays a graph
@@ -103,8 +103,8 @@ def violin_plot(headers,titles,data, splitlogic = True):
     plot_index = headers[1]
     conditional_header = headers[2]
 
-    xlabel = titles[0]
-    ylabel = titles[1]
+    x_label = titles[0]
+    y_label = titles[1]
     graph_title = titles[2]
     plt.rcParams["figure.figsize"] = (15, 10)
     plt.clf()
@@ -112,8 +112,8 @@ def violin_plot(headers,titles,data, splitlogic = True):
     sns.set(font_scale=2)
     plot_one = sns.violinplot(x = plot_index,y = data_header, hue= conditional_header,data = data,\
          orient = "v", cut = 0, split=splitlogic, palette="rocket", )
-    plot_one.set(xlabel=xlabel)
-    plot_one.set(ylabel=ylabel)
+    plot_one.set(xlabel=x_label)
+    plot_one.set(ylabel=y_label)
 
     plot_one.set_title(graph_title)
     plt.show()
@@ -126,10 +126,10 @@ def color_changer(color_list):
     a graph.
 
     Arguments:
-    color_list: List of stings representing colors in hexadecimal,such as
-    (##0077ff)
+    color_list: List of stings representing colors in hexadecimal, such as
+                (##0077ff)
     """
-    plt.rcParams['axes.prop_cycle'] = plt.cycler(color=color_list)
+    plt.rcParams["axes.prop_cycle"] = plt.cycler(color=color_list)
 
 
 
@@ -138,28 +138,28 @@ def plot_format():
     Function used to format plots with a specific style. Called before
     plotting a graph.
     """
-    sns.set(font='Franklin Gothic Book',
+    sns.set(font="Franklin Gothic Book",
         rc={
-    'axes.axisbelow': False,
-    'axes.edgecolor': 'lightgrey',
-    'axes.facecolor': 'None',
-    'axes.grid': False,
-    'axes.labelcolor': 'dimgrey',
-    'axes.spines.right': False,
-    'axes.spines.top': False,
-    'figure.facecolor': 'white',
-    'lines.solid_capstyle': 'round',
-    'patch.edgecolor': 'w',
-    'patch.force_edgecolor': True,
-    'text.color': 'dimgrey',
-    'xtick.bottom': False,
-    'xtick.color': 'dimgrey',
-    'xtick.direction': 'out',
-    'xtick.top': False,
-    'ytick.color': 'dimgrey',
-    'ytick.direction': 'out',
-    'ytick.left': False,
-    'ytick.right': False})
+    "axes.axisbelow": False,
+    "axes.edgecolor": "lightgrey",
+    "axes.facecolor": "None",
+    "axes.grid": False,
+    "axes.labelcolor": "dimgrey",
+    "axes.spines.right": False,
+    "axes.spines.top": False,
+    "figure.facecolor": "white",
+    "lines.solid_capstyle": "round",
+    "patch.edgecolor": "w",
+    "patch.force_edgecolor": True,
+    "text.color": "dimgrey",
+    "xtick.bottom": False,
+    "xtick.color": "dimgrey",
+    "xtick.direction": "out",
+    "xtick.top": False,
+    "ytick.color": "dimgrey",
+    "ytick.direction": "out",
+    "ytick.left": False,
+    "ytick.right": False})
     sns.set_context("notebook", rc={"font.size":16,
                                     "axes.titlesize":20,
                                     "axes.labelsize":18})

@@ -22,9 +22,11 @@ def extract_directors_and_title_count(data_frame):
     """
     directors = {}
 
-    for director in data_frame['director']:
-        if ',' in director:
-            for person in str(director).split(', '):
+    # Creates a dictionary with all of the unique director names as keys
+    # and the number of titles they directed as values
+    for director in data_frame["director"]:
+        if "," in director:
+            for person in str(director).split(", "):
                 if person not in directors:
                     directors[person] = 1
                 else:
@@ -35,6 +37,7 @@ def extract_directors_and_title_count(data_frame):
             else:
                 directors[director] += 1
 
+    # Turns the dictionary into lists
     director_list = list(directors.keys())
     director_counts = list(directors.values())
     return director_list, director_counts
@@ -57,7 +60,9 @@ def extract_rating_and_title_count(data_frame):
 
     ratings = {}
 
-    for rating in data_frame['rating']:
+    # Creates a dictionary including the unique content ratings as keys
+    # and the number of titles with those ratings as values
+    for rating in data_frame["rating"]:
         if rating not in ratings:
             ratings[rating] = 1
         else:
@@ -66,11 +71,13 @@ def extract_rating_and_title_count(data_frame):
     rating_list = list(ratings.keys())
     rating_counts = list(ratings.values())
 
+    # Takes titles rated a mystery rating "2863" and adds them to the
+    # Unrated rating key
     rating_counts[rating_list.index("UR")] += \
-        rating_counts[rating_list.index('2863')]
+        rating_counts[rating_list.index("2863")]
 
-    rating_counts.pop(rating_list.index('2863'))
-    rating_list.pop(rating_list.index('2863'))
+    rating_counts.pop(rating_list.index("2863"))
+    rating_list.pop(rating_list.index("2863"))
 
     return rating_list, rating_counts
 
@@ -85,6 +92,7 @@ def convert_date_to_datetime(date):
 
     no_comma_date = date.replace(",", "")
 
+    # Converts the date into a datetime instance
     date = dt.datetime.strptime(no_comma_date, "%B %d %Y")
 
     return date
@@ -126,13 +134,15 @@ def remove_rows_containing_nan(list_1, list_2):
 
     final_list= []
 
+    # Adds defined values to final_list. Does not include NaN or "NONE" values
     for row in list(combined_list):
         if all(row) and "NONE" not in row and row[0]==row[0] and \
                     row[1]==row[1]:
-
             final_list.append(row)
 
-    resulting_lists = [[i for i, j in final_list], [j for i, j in final_list]]
+    # Separates the zipped file into two lists
+    resulting_lists = [[first for first, second in final_list], \
+        [second for first, second in final_list]]
 
     list_1 = resulting_lists[0]
     list_2 = resulting_lists[1]
@@ -152,8 +162,9 @@ def remove_none_entries_one_dataframe_column(data_frame_column):
     list_ = list(data_frame_column)
     new_list = []
 
+    # Removes items containing "NONE" or NaN values
     for entry in list_:
-        if entry != "NONE":
+        if entry != "NONE" and entry == entry:
             new_list.append(entry)
 
     return new_list
@@ -170,8 +181,9 @@ def remove_none_entries_one_list(list_):
     """
     new_list = []
 
+    # Removes "NONE" or NaN values
     for entry in list_:
-        if entry == 0 or (bool(entry) and entry != "NONE"):
+        if entry != "NONE" and entry == entry:
             new_list.append(entry)
 
     return new_list
@@ -193,11 +205,14 @@ def sort_list_based_on_other(list_to_order, secondary_list, \
         new_list_1: the now-sorted priority list
         new_secondary_list: the now-sorted parallel list
     """
+
+    # Combines lists to sort in parallel
     zipped = zip(list_to_order, secondary_list)
     sorted_zip = sorted(zipped, reverse=greatest_to_least)
 
     new_tuples = zip(*sorted_zip)
 
+    # Separates zipped file back into two lists
     (new_list_to_order, new_secondary_list) = [list(new_tuple) for \
         new_tuple in new_tuples]
 
@@ -225,6 +240,7 @@ def find_year_difference(dates, years):
 
     new_dates = []
 
+    # Creates a list of all of the dates and removes leading spaces
     for date in dates:
         working_date = date
         if date[0] == " ":
@@ -233,6 +249,7 @@ def find_year_difference(dates, years):
 
     all_dates = [convert_date_to_datetime(date) for date in new_dates]
 
+    # Finds all of the differences and saves to list
     differences = [release_year_to_add_date(all_dates[i], years[i]) for \
         i in range(len(years))]
 
@@ -257,6 +274,9 @@ def find_cases_and_pull_from_other_column(data_frame, column_1, quality, \
         entries in the first column that match the inputted condition.
     """
     commonality_list = []
+
+    # Creates a list of values in the second column with the same index as
+    # values in the first column that match a specific quality
     for index, item in enumerate(data_frame[column_1]):
         if item == quality:
             commonality_list.append(data_frame[column_2][index])
@@ -290,6 +310,7 @@ def two_columns_to_violin_dataframe(data_frame, column_1, \
 
     (list_1, list_2) = remove_rows_containing_nan(list_1, list_2)
 
+    # Creates a logical list that says which dataset each value belongs to
     logical = [column_1_legend_name]*len(list_1)
 
     logical.extend([column_2_legend_name]*len(list_2))
@@ -298,6 +319,7 @@ def two_columns_to_violin_dataframe(data_frame, column_1, \
 
     x_labels = ["All Titles"] * len(list_1)
 
+    # Creates a dictionary to aid with creation of a pandas dataframe
     dictionary = {"PlotData":list_1, "Reviewer":logical, \
         "x_label": x_labels}
 
@@ -316,12 +338,19 @@ def critics_vs_audience_scores(data_frame):
         "rottentomatoes_tomatometer_score", "Critic", \
         "rottentomatoes_audience_score", "Audience")
 
-    plots.violin_plot(["PlotData","x_label","Reviewer"],[" ","Tomatometer Score","Critic and Audience Ratings of Netflix Titles"], data)
+    plots.violin_plot(["PlotData","x_label","Reviewer"],[" ", \
+        "Tomatometer Score", "Critic and Audience Ratings of Netflix Titles"],\
+             data)
 
 def release_to_added_times(data_frame):
+    """
+    """
 
-    differences = find_year_difference(data_frame["date_added"], data_frame["release_year"])
+    differences = find_year_difference(data_frame["date_added"], \
+        data_frame["release_year"])
 
+    # Creates a dictionary that includes all of the differences and their
+    # frequencies
     difference_dict = {}
     for difference in differences:
         if difference not in difference_dict:
@@ -333,11 +362,17 @@ def release_to_added_times(data_frame):
 
     difference_counts = list(difference_dict.values())
 
-    (difference_counts, differences) = sort_list_based_on_other(difference_counts, differences)
+    # Sorts the two lists
+    (difference_counts, differences) = \
+        sort_list_based_on_other(difference_counts, differences)
 
     return (difference_counts, differences)
 
 def age_of_titles(data_frame):
+    """
+    """
+    
+    # List of the current year
     now_list = [2021]*len(data_frame["release_year"])
 
     differences = []
@@ -347,6 +382,8 @@ def age_of_titles(data_frame):
     for list_1, list_2 in zipped:
         differences.append(list_1-list_2)
 
+    # Creates a dictionary that inclues all of the differences and their
+    # frequencies
     difference_dict = {}
     for difference in differences:
         if difference not in difference_dict:
@@ -358,6 +395,8 @@ def age_of_titles(data_frame):
 
     difference_counts = list(difference_dict.values())
 
-    (difference_counts, differences) = sort_list_based_on_other(difference_counts, differences)
+    # Sorts the lists
+    (difference_counts, differences) = \
+        sort_list_based_on_other(difference_counts, differences)
 
     return difference_counts, differences
