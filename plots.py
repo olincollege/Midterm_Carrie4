@@ -1,65 +1,33 @@
 """
+Handles all plotting functionalities including plotting data as well as,
+formatting plots. 
 """
-
+import pylint
 import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
 
-def bubble_graph(x_axis=None, y_axis=None, labels=None, graph_title=None, \
-                 x_axis_title=None, y_axis_title=None,index=-1):
-    """
-    Creates a bubble graph on an x and y plot where 
-    the size of each bubble represents more data :)
-
-    Arguments:
-    x_axis: list of integers or strings to plot on the x_axis
-    y_axis: listof integers to plot on the y_axis
-    labels: a list of strings that represent pie chart labels
-    graph_title: title of graph in string form
-    x_axis: x_axis label of graph in string form
-    y_axis: y_axis label of graph in string form
-
-    Returns: none, displays graph 
-
-    """
-
-    #Defines the color of the bubbles
-    colors = np.random.rand(len(x_axis[0:index]))
-
-    #Defines what goes on th X-Axis in an int form
-    u, ind = np.unique(x_axis[0:index], return_inverse=True)
-
-    #Equation for size of each dot
-    size = [element * 100
-    for element in y_axis[0:index]]
-
-    # Create scatterplot. alpha controls the opacity and s controls the size.
-    ax = sns.scatterplot(x=ind, y=y_axis[0:index], alpha = 0.5,s = size, \
-        hue = colors)
-
-    #Set Axis limits
-    ax.set_xlim(0,6)
-    ax.set_ylim(0, 5)
-
-    #For each point, we add a text inside the bubble
-    for line in range(0,ind[0]):
-        ax.text(ind[line], y_axis[line], labels[line], \
-            horizontalalignment='center', size=10, color='black', \
-                weight='semibold')
-    plt.xticks(range(len(u)), u)
-
-    #Label graph
-    plt.xlabel("Release Year", size=16)
-    plt.ylabel("Number of Directed movies", size=16)
-    plt.title("Directed movies vs Release Year", size = 16)
-
-    plt.show()
-
-    return None
 
 def bar_graph(x_data=["1"], y_data=[1],x_label="",\
     y_label="",graph_title="",color = "red"):
+    
+    """
+    Uses two lists of data to create bar graphs
 
+    Arguments: 
+    x_data: list of floats or integers the same
+    length as y_data
+    y_data: list of floats or integers the same 
+    length as x_data
+    x_label: String representing the label on the
+    x-axis
+    y_label: String representing the label on the 
+    y_axis
+    graph_title: String representing title of graph
+    color: String representing colors supported by the
+    matplotlib, changign the color of plotted bars
+
+    """
 
     plt.style.use("ggplot")
     plt.bar(x_data,y_data, color = color)
@@ -77,29 +45,28 @@ def pie_chart(labels, sizes,end_index,start_index = 0):
 
     Arugments:
     labels: A list of strings representing a label for each slice of the chart
-    sizes: A list of integers associated with each label
-    end_index: an intiger representing the end range of data to plot 
-                (exclusive)
+    where any value less than 2% on the chart does not have a label to eliinate
+    text clipping
+    sizes: A list of integers the same length of labels, representing wach labels
+            value 
+    end_index: An intiger representing the end range of data to plot 
+            (exclusive)
     start_index: An itneger representign the start range of data to plot
-                (inclusive)
+            (inclusive)
 
-    Return: None, plots a pi chart
     """
-    
+
     label = labels[start_index:end_index]
-    
-        
     sizes = [size/sum(sizes[start_index:end_index]) for size in \
         sizes[start_index:end_index]]
+    explode_index =sizes.index(max(sizes))
 
     for count, chunk in enumerate(sizes):
         if chunk < .02:
             label[count] = ""
 
-    explode_index =sizes.index(max(sizes))
     explode = [0] * (len(label))
     explode[explode_index] = .11
-
     fig1, ax1 = plt.subplots()
     
     def my_autopct(pct):
@@ -107,48 +74,70 @@ def pie_chart(labels, sizes,end_index,start_index = 0):
 
     ax1.pie(sizes, explode=explode, labels=label, autopct=my_autopct, \
         shadow=False, startangle=90, normalize = False, textprops={'fontsize':24})
-    
-    # Equal aspect ratio ensures that pie is drawn as a circle.
     ax1.axis('equal')  
-
     plt.legend(labels[start_index:end_index], loc="center left", fontsize= 24)
-    
     plt.show()
-
     return None
 
 
-
-def violin_plot(y_label,data,conditional, legend_label = "" ,x_label = None,x_title="Set X axis",y_title="", \
-    graph_title="Set title", splitLogic = True):
+def violin_plot(data_header,data,conditional_header = None,plot_index = None,x_title="Set X axis",\
+        y_title="",graph_title="Set title", splitLogic = True):
     """
-    Takes a list of integer and creates a violin plot
+    Plots a violin plot with the optional parameters, such as split,
+    wich plots two datasets on the same violin plot, or the ability
+    to plot multiple violin plots with a single dataset  
 
-    Arguments: 
-    x_data: List of integers, or floats to be plotted based
-    on frequency each integer occurs
-    x_title: A string representing the x-axis label
-    y_title: A string representing the y-axis title
-    title: A strign representing the title of the graph
+    Arguments:
+    data_header: String the same name of the header of the data column
+    data: a pandas dataframe containing at least data in one column, and a 
+    second column of the plot_index. Conditional_header is optional based
+    on if split is True or not.
+    conditional_header: A string the same name of a column header. The
+    dataframe column associated must only have 2 unique values, which dictate
+    which side of the violin plot the data belongs on when using split
+    plot_index: A string the same name of a header in the dataframe
+    representing which violin plot the data belongs to (Used to create
+    multiple violin plots)
+    x_title: String representing the label on thex-axis
+    y_title: String representing the label on the y_axis
+    graph_title: String representing title of graph
+    splitLogic: Bool representing whether to plot split violin plots based
+    on the conditional_header.
+    
 
     Returns: None, displays a graph
     """
     plt.clf()
     sns.set_theme(style="whitegrid")
     sns.set(font_scale=2)
-    ax = sns.violinplot(x = x_label,y = y_label, hue= conditional,data = data, orient = "v", cut = 0, split=splitLogic, palette="rocket", )
+    ax = sns.violinplot(x = plot_index,y = data_header, hue= conditional_header,data = data,\
+         orient = "v", cut = 0, split=splitLogic, palette="rocket", )
     ax.set(xlabel='')
     ax.set_title(graph_title)
     plt.show()
 
     return None
 
+
 def color_changer(color_list = []):
-    
+    """
+    Takes a list of Hexadecimal colors to set a defualt color palette for
+    matplotlib to change style of graphs. Called before plotting
+    a graph.
+
+    Arguments: 
+    color_list: List of stings representing colors in hexadecimal,such as
+    (##0077ff)
+    """    
     plt.rcParams['axes.prop_cycle'] = plt.cycler(color=color_list)
     return None
 
+
 def plot_format():
+    """
+    Function used to format plots with a specific style. Called before 
+    plotting a graph.
+    """
     sns.set(font='Franklin Gothic Book',
         rc={
     'axes.axisbelow': False,
@@ -175,4 +164,3 @@ def plot_format():
                                     "axes.titlesize":20,
                                     "axes.labelsize":18})
     return None
-######################################################
