@@ -61,8 +61,8 @@ def pie_chart(labels, sizes,end_index,start_index = 0):
             label[count] = ""
 
     explode = [0] * (len(label))
-    explode[explode_index] = .11
-    ax1 = plt.subplots()
+    explode[explode_index] = .05
+    _, ax1 = plt.subplots()
 
     def my_autopct(pct):
         return ('%1.1f%%' % pct) if pct > 4 else ''
