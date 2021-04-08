@@ -1,9 +1,8 @@
 """
 Establishes a set of functions needed to process data into more helpful formats.
 """
-import pandas as pd
-import numpy as np
 import datetime as dt
+import pandas as pd
 import plots
 
 def extract_directors_and_title_count(data_frame):
@@ -15,7 +14,7 @@ def extract_directors_and_title_count(data_frame):
     Args:
         data_frame: an object of class pandas.core.frame.DataFrame that
                     holds a list of Netflix titles and associated properties
-    
+
     Returns:
         director_list: a list of all directors in the input dataframe
         director_counts: a corresponding list that includes the number of
@@ -35,7 +34,7 @@ def extract_directors_and_title_count(data_frame):
                 directors[director] = 1
             else:
                 directors[director] += 1
-    
+
     director_list = list(directors.keys())
     director_counts = list(directors.values())
     return director_list, director_counts
@@ -49,7 +48,7 @@ def extract_rating_and_title_count(data_frame):
     Args:
         data_frame: an object of class pandas.core.frame.DataFrame that
                     holds a list of Netflix titles and associated properties
-    
+
     Returns:
         rating_list: a list of all MPAA ratings in the input dataframe
         rating_counts: a corresponding list that includes the number of
@@ -63,13 +62,13 @@ def extract_rating_and_title_count(data_frame):
             ratings[rating] = 1
         else:
             ratings[rating] = ratings[rating] + 1
-    
+
     rating_list = list(ratings.keys())
     rating_counts = list(ratings.values())
 
     rating_counts[rating_list.index("UR")] += \
         rating_counts[rating_list.index('2863')]
-    
+
     rating_counts.pop(rating_list.index('2863'))
     rating_list.pop(rating_list.index('2863'))
 
@@ -97,7 +96,7 @@ def release_year_to_add_date(exact_date, release_year):
     Args:
         exact_date: a datetime.datetime object that contains an exact date
         year: an integer representing a year
-    
+
     Returns:
         an integer representing the time elapsed in years between inputs
     """
@@ -117,7 +116,7 @@ def remove_rows_containing_nan(list_1, list_2):
     Args:
         list_1: a list of values
         list_2: a second corresponding list
-    
+
     Returns:
         list_1: a list of values with no empty values
         list_2: a second corresponding list with no empty values
@@ -144,7 +143,7 @@ def remove_none_entries_one_dataframe_column(data_frame_column):
 
     Args:
         data_frame_column: a column from a pandas dataframe
-    
+
     Returns:
         A list containing the non-none values of the input column
     """
@@ -154,7 +153,7 @@ def remove_none_entries_one_dataframe_column(data_frame_column):
     for entry in list_:
         if entry != "NONE":
             new_list.append(entry)
-    
+
     return new_list
 
 def remove_none_entries_one_list(list_):
@@ -163,7 +162,7 @@ def remove_none_entries_one_list(list_):
 
     Args:
         list_: a column from a pandas dataframe
-    
+
     Returns:
         A list containing the non-none values of the input column
     """
@@ -172,7 +171,7 @@ def remove_none_entries_one_list(list_):
     for entry in list_:
         if entry != "NONE":
             new_list.append(entry)
-    
+
     return new_list
 
 def sort_list_based_on_other(list_to_order, list_to_order_by, \
@@ -181,7 +180,7 @@ def sort_list_based_on_other(list_to_order, list_to_order_by, \
     Sorts two lists in parallel, giving priority to one list for sorting.
 
     Orders the lists least to greatest or greatest to least based on
-    user input. 
+    user input.
 
     Args:
         list_to_order: a list representing the priority list to sort by
@@ -199,13 +198,25 @@ def sort_list_based_on_other(list_to_order, list_to_order_by, \
 
     (new_list_to_order_by, new_list_to_order) = [list(new_tuple) for \
         new_tuple in new_tuples]
-    
+
     print(new_list_to_order)
-    
+
     return new_list_to_order, new_list_to_order_by
 
 def find_year_difference(dates, years):
     """
+    Finds the difference between a date and associated years
+
+    Args:
+        dates: A dataframe column or list containing strings that represent
+               dates. They are of the form "Month DD, YYYY"
+        years: A dataframe column or list containing integers that represent
+               years. They are of the form YYYY.
+
+    Returns:
+        A list that contains the differences between all dates and the matching
+        years. If either input contained empty or extra values, the returned
+        list will not contain those rows.
     """
     dates = list(dates)
     years = list(years)
@@ -224,12 +235,26 @@ def find_year_difference(dates, years):
 
     differences = [release_year_to_add_date(all_dates[i], years[i]) for \
         i in range(len(years))]
-    
+
     return differences
 
 def find_cases_and_pull_from_other_column(data_frame, column_1, quality, \
     column_2):
     """
+    Finds all of the elements of a dataframe column that match a certain
+    condition, then find the values in another column that map to those
+    entries.
+
+    Args:
+        data_frame: a data frame with at least two columns to search within
+        column_1: The heading of the first datafram column to check
+        quality: The condition to search for within column_1
+        column_2: The heading of the column from which to pull entries at the
+                  indices in the first column that match the quality
+
+    Returns:
+        A list containing the items in the second column that map to the
+        entries in the first column that match the inputted condition.
     """
     commonality_list = []
     for index, item in enumerate(data_frame[column_1]):
@@ -238,31 +263,58 @@ def find_cases_and_pull_from_other_column(data_frame, column_1, quality, \
 
     return commonality_list
 
-def three_lists_to_violin_dataframe(list_1, list_2, list_3):
+def two_columns_to_violin_dataframe(data_frame, column_1, \
+    column_1_legend_name, column_2, column_2_legend_name \
+    ):
     """
-    """
-    logical = ["Critics"]*len(list_1)
+    Using two columns of a dataframe, generates a new dataframe for
+    creating of a violin plot.
 
-    logical.extend(["Audience"]*len(list_2))
+    Args:
+        data_frame: a large data frame with many columns
+        column_1: The string heading of the first column for violin plotting
+        column_1_legend_name: A string that represents how the first dataframe
+                              column should be labeled in the violin plot
+        column_2: The string heading of the second column for violin plotting
+        column_2_legend_name: A string that represents how the second dataframe
+                              column should be labeled in the violin plot
+
+    Returns:
+        A dataframe of three columns: The first column being the two input
+        columns concatenated, the second being a logical list that signifies
+        which side of the violin split each datapoint should be plotted to,
+        and the third representing the x-axis label of the plot
+    """
+    list_1 = list(data_frame[column_1])
+    list_2 = list(data_frame[column_2])
+
+    (list_1, list_2) = remove_rows_containing_nan(list_1, list_2)
+
+    logical = [column_1_legend_name]*len(list_1)
+
+    logical.extend([column_2_legend_name]*len(list_2))
 
     list_1.extend(list_2)
 
-    dictionary = {"Tomatometer Score":list_1, "Reviewer":logical, "x_label": list_3}
+    x_labels = ["Data"] * len(list_1)
+
+    dictionary = {"PlotData":list_1, "Logic":logical, \
+        "x_label": x_labels}
 
     return pd.DataFrame(dictionary)
 
 def critics_vs_audience_scores(data_frame):
     """
+    From a given dataframe, pulls out select columns and plots them
+    using a violin plot
+
+    Args:
+        data_frame: A dataframe with at least two columns
     """
 
-    critics = list(data_frame["rottentomatoes_tomatometer_score"])
-    audience = list(data_frame["rottentomatoes_audience_score"])
+    data = two_columns_to_violin_dataframe(data_frame, \
+        "rottentomatoes_tomatometer_score", "Critic Score", \
+        "rottentomatoes_audience_score", "Audience Score")
 
-    (critics, audience) = remove_rows_containing_nan(critics, audience)
-
-    x_labels = ["All Titles"] * (len(critics) + len(audience))
-
-    df = three_lists_to_violin_dataframe(critics, audience, x_labels)
-
-    plots.violin_plot("Tomatometer Score", df, "Reviewer", x_label="x_label", graph_title="Critic and Audience Ratings of Netflix Titles")
-
+    plots.violin_plot("PlotData", data, "Logic", x_label = "x_label",\
+        graph_title="Critic and Audience Ratings of Netflix Titles")
