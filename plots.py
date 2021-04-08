@@ -4,6 +4,7 @@ formatting plots.
 """
 import matplotlib.pyplot as plt
 import seaborn as sns
+from matplotlib.pyplot import figure
 
 
 
@@ -24,6 +25,7 @@ def bar_graph(titles,x_data=1, y_data=1,color = "red"):
     x_label = titles[0]
     y_label = titles[1]
     graph_title = titles[2]
+    plt.rcParams["figure.figsize"] = (15, 10)
 
     plt.style.use("ggplot")
     plt.bar(x_data,y_data, color = color)
@@ -62,15 +64,15 @@ def pie_chart(labels, sizes,end_index,start_index = 0):
 
     explode = [0] * (len(label))
     explode[explode_index] = .05
-    _, ax1 = plt.subplots()
 
     def my_autopct(pct):
         return ('%1.1f%%' % pct) if pct > 4 else ''
 
-    ax1.pie(sizes, explode=explode, labels=label, autopct=my_autopct, \
+    plt.rcParams["figure.figsize"] = (15, 15)
+    plt.pie(sizes, explode=explode, labels=label, autopct=my_autopct, \
         shadow=False, startangle=90, normalize = False, textprops={'fontsize':24})
-    ax1.axis('equal')
-    plt.legend(labels[start_index:end_index], loc="center left", fontsize= 24)
+    #plt.legend(labels[start_index:end_index], loc="lower left", fontsize= 24)
+    plt.title("Netflix Content Ratings", fontsize = 45)
     plt.show()
 
 
@@ -104,6 +106,7 @@ def violin_plot(headers,titles,data, splitlogic = True):
     xlabel = titles[0]
     ylabel = titles[1]
     graph_title = titles[2]
+    plt.rcParams["figure.figsize"] = (15, 10)
     plt.clf()
     sns.set_theme(style="whitegrid")
     sns.set(font_scale=2)

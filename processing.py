@@ -129,7 +129,7 @@ def remove_rows_containing_nan(list_1, list_2):
     for row in list(combined_list):
         if all(row) and "NONE" not in row and row[0]==row[0] and \
                     row[1]==row[1]:
-                    
+
             final_list.append(row)
 
     resulting_lists = [[i for i, j in final_list], [j for i, j in final_list]]
@@ -296,9 +296,9 @@ def two_columns_to_violin_dataframe(data_frame, column_1, \
 
     list_1.extend(list_2)
 
-    x_labels = ["Data"] * len(list_1)
+    x_labels = ["All Titles"] * len(list_1)
 
-    dictionary = {"PlotData":list_1, "Logic":logical, \
+    dictionary = {"PlotData":list_1, "Reviewer":logical, \
         "x_label": x_labels}
 
     return pd.DataFrame(dictionary)
@@ -313,7 +313,51 @@ def critics_vs_audience_scores(data_frame):
     """
 
     data = two_columns_to_violin_dataframe(data_frame, \
-        "rottentomatoes_tomatometer_score", "Critic Score", \
-        "rottentomatoes_audience_score", "Audience Score")
+        "rottentomatoes_tomatometer_score", "Critic", \
+        "rottentomatoes_audience_score", "Audience")
 
-    plots.violin_plot(["PlotData","x_label","Logic"],["X-Axis","y_axis","Critic and Audience Ratings of Netflix Titles"], data)
+    plots.violin_plot(["PlotData","x_label","Reviewer"],[" ","Tomatometer Score","Critic and Audience Ratings of Netflix Titles"], data)
+
+def release_to_added_times(data_frame):
+
+    differences = find_year_difference(data_frame["date_added"], data_frame["release_year"])
+
+    difference_dict = {}
+    for difference in differences:
+        if difference not in difference_dict:
+            difference_dict[difference] = 1
+        else:
+            difference_dict[difference] += 1
+
+    differences = list(difference_dict.keys())
+
+    difference_counts = list(difference_dict.values())
+
+    (difference_counts, differences) = sort_list_based_on_other(difference_counts, differences)
+
+    return (difference_counts, differences)
+
+def age_of_titles(data_frame):
+    now_list = [2021]*len(data_frame["release_year"])
+
+    differences = []
+
+    zipped = zip(now_list, list(data_frame["release_year"]))
+
+    for list_1, list_2 in zipped:
+        differences.append(list_1-list_2)
+
+    difference_dict = {}
+    for difference in differences:
+        if difference not in difference_dict:
+            difference_dict[difference] = 1
+        else:
+            difference_dict[difference] += 1
+
+    differences = list(difference_dict.keys())
+
+    difference_counts = list(difference_dict.values())
+
+    (difference_counts, differences) = sort_list_based_on_other(difference_counts, differences)
+
+    return difference_counts, differences
