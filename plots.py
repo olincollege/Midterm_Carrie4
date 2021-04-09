@@ -4,7 +4,6 @@ formatting plots.
 """
 import matplotlib.pyplot as plt
 import seaborn as sns
-from matplotlib.pyplot import figure
 
 
 
@@ -44,8 +43,8 @@ def pie_chart(slice_labels, sizes,end_index,start_index = 0):
     represented by the integer divided by the sum of the list of integers
 
     Arugments:
-    slice_labels: A list of strings representing a label for each slice of the 
-            chart where the label of any value less than 2% is removed to 
+    slice_labels: A list of strings representing a label for each slice of the
+            chart where the label of any value less than 2% is removed to
             eliminate text clipping
     sizes: A list of integers the same length of labels, representing each labels
             value
@@ -99,7 +98,7 @@ def violin_plot(headers,titles,data, splitlogic = True):
     data: A pandas dataframe containing at least data in one column, and a
           second column, the plot_index. Conditional_header is optional based
           on if split is True or not.
-    titles: A list of Strings where the first string represents the x-axis 
+    titles: A list of Strings where the first string represents the x-axis
             title, the second represents the axis title and the last represents
             the graph title
 

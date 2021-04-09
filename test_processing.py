@@ -134,7 +134,7 @@ def test_remove_none_entries_one_list_cases(bad_list, clean_list):
 def test_sort_list_based_on_other(list_1,list_2,list_1_sorted,list_2_sorted):
     """
     Test that this function properly sorts two lists based on the contents of
-    one list. 
+    one list.
 
     Should reorder both lists so that one of them is in the natural sorted()
     order, and the other list's values should be mapped to the same values

@@ -164,7 +164,8 @@ def remove_none_entries_one_dataframe_column(data_frame_column):
 
     # Removes items containing "NONE" or NaN values
     for entry in list_:
-        if entry != "NONE" and entry == entry:
+        entry_comparator = entry
+        if entry != "NONE" and entry_comparator == entry:
             new_list.append(entry)
 
     return new_list
@@ -183,7 +184,8 @@ def remove_none_entries_one_list(list_):
 
     # Removes "NONE" or NaN values
     for entry in list_:
-        if entry != "NONE" and entry == entry:
+        entry_comparator = entry
+        if entry != "NONE" and entry_comparator == entry:
             new_list.append(entry)
 
     return new_list
@@ -344,6 +346,17 @@ def critics_vs_audience_scores(data_frame):
 
 def release_to_added_times(data_frame):
     """
+    Finds the difference in years between the release years of content and the
+    date the content was added to the platform
+
+    Args:
+        data_frame: a pandas dataframe that includes a Netflix catalog
+
+    Returns:
+        A list of the unique differences in years between release year and add
+            date
+        A list that includes the frequency of each of the values in the first
+            list
     """
 
     differences = find_year_difference(data_frame["date_added"], \
@@ -370,8 +383,16 @@ def release_to_added_times(data_frame):
 
 def age_of_titles(data_frame):
     """
+    Determines how old Netflix offerings are
+
+    Args:
+        data_frame: a pandas dataframe including the platform's offerings
+
+    Returns:
+        A list of the unique ages in years of all titles in the dataframe
+        A list of frequencies of each of those values
     """
-    
+
     # List of the current year
     now_list = [2021]*len(data_frame["release_year"])
 
